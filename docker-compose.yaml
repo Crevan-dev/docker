@@ -1,2 +1,3 @@
 include:
   - ./postgres/docker-compose.yaml
+  - ./rabbit/docker-compose.yaml
