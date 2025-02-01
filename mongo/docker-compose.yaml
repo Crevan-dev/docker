@@ -1,31 +1,20 @@
 services:
-  mongo1:
+  mongo:
     image: mongo:latest
-    command: ["--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
+    container_name: mongo_db
+    restart: unless-stopped
     ports:
-      - 27017:27017
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_INITDB_REPLICA_SET_NAME: rs0
-    healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
-      interval: 5s
-      timeout: 30s
-      start_period: 1s
-      retries: 30
     volumes:
-      - "mongo1_data:/data/db"
-      - "mongo1_config:/data/configdb"
+      - mongo_data:/data/db
     networks:
       - dev
-    restart: unless-stopped
 
 volumes:
-  mongo1_data:
-  mongo1_config:
+  mongo_data:
 
 networks:
   dev:
